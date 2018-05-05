@@ -1,0 +1,38 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "me.champeau.gradle:jmh-gradle-plugin:0.4.5"
+    }
+}
+
+apply plugin: 'java'
+
+apply plugin: "me.champeau.gradle.jmh"
+
+group = 'com.github.alcereo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compileOnly 'org.openjdk.jmh:jmh-generator-annprocess:1.21'
+    compile 'org.openjdk.jmh:jmh-core:1.21'
+}
+
+jmh{
+    jmhVersion = '1.21'
+    include = ['com\\.github\\.alcereo\\.benchtest.*']
+}
