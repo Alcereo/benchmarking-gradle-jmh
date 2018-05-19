@@ -15,16 +15,6 @@ public class EventsSimpleService implements EventsService {
     private ConcurrentHashMap<String, Collection<CriticalEvent>> criticalEventsCache = new ConcurrentHashMap<>();
 
     @Override
-    public void addHistoryItem(HistoryItem item) {
-        if (item instanceof CriticalEvent)
-            addCriticalEvent((CriticalEvent) item);
-        else if (item instanceof InfoEvent)
-            addInfoEvent((InfoEvent) item);
-        else if (item instanceof TransactionEvent)
-            addTransactionEvent((TransactionEvent) item);
-    }
-
-    @Override
     public void addCriticalEvent(CriticalEvent event) {
         final Collection<HistoryItem> historyItems = allHsitoryCache.computeIfAbsent(event.getAtmId(), s -> new PriorityQueue<>());
         final Collection<CriticalEvent> criticalHistoryItems = criticalEventsCache.computeIfAbsent(event.getAtmId(), s -> new PriorityQueue<>());

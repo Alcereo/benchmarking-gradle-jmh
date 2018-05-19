@@ -4,7 +4,14 @@ import java.util.List;
 
 public interface EventsService {
 
-    void addHistoryItem(HistoryItem item);
+    default void addHistoryItem(HistoryItem item) {
+        if (item instanceof CriticalEvent)
+            addCriticalEvent((CriticalEvent) item);
+        else if (item instanceof InfoEvent)
+            addInfoEvent((InfoEvent) item);
+        else if (item instanceof TransactionEvent)
+            addTransactionEvent((TransactionEvent) item);
+    }
 
     void addCriticalEvent(CriticalEvent event);
 
