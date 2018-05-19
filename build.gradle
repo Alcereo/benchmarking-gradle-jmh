@@ -30,6 +30,11 @@ repositories {
 dependencies {
     compileOnly 'org.openjdk.jmh:jmh-generator-annprocess:1.21'
     compile 'org.openjdk.jmh:jmh-core:1.21'
+
+    compileOnly 'org.projectlombok:lombok:1.16.20'
+
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
+    testCompile('org.junit.jupiter:junit-jupiter-engine:5.2.0')
 }
 
 jmh{
