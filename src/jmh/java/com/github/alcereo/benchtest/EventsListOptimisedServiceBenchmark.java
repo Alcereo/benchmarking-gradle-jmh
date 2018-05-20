@@ -33,7 +33,7 @@ public class EventsListOptimisedServiceBenchmark {
     @Setup
     public void setup(BenchmarkParams params){
 
-        service = new EventsListOptimisedService();
+        service = new EventsListOptimisedService(100);
 
         Instant now = Instant.now();
 
@@ -88,6 +88,7 @@ public class EventsListOptimisedServiceBenchmark {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(".*" + EventsListOptimisedServiceBenchmark.class.getSimpleName() + ".*")
+                .param("samplesCount","1000")
                 .build();
 
         new Runner(opt).run();

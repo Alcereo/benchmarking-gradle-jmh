@@ -24,9 +24,12 @@ class EventsListOptimisedServiceTest {
     private int limit;
     private int offset;
     private String atmId;
+    private static int querySizeBound;
 
     @BeforeAll
     static void setUpHistory() {
+
+        querySizeBound = 1000;
 
         Arrays.<Supplier<List<? extends HistoryItem>>>asList(
                 () -> buildCriticalEvents(1000),
@@ -41,7 +44,7 @@ class EventsListOptimisedServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new EventsListOptimisedService();
+        service = new EventsListOptimisedService(querySizeBound);
         limit = random.nextInt(50);
         offset = random.nextInt(100);
         atmId = String.valueOf(random.nextInt(atmIdBound));
