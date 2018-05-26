@@ -1,4 +1,5 @@
-package com.github.alcereo.listopt;
+package com.github.alcereo.sortedmap;
+
 
 import com.github.alcereo.*;
 
@@ -6,13 +7,13 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class EventsListOptimisedService implements EventsService {
+public class EventsSortedMapService implements EventsService {
 
     private int historySizeBound;
-    private ConcurrentHashMap<String, BoundedSynchronisedSortedCacheList<HistoryItem>> allHsitoryCache = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, BoundedSynchronisedSortedCacheList<CriticalEvent>> criticalEventsCache = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, BoundedSynchronisedSortedMapCache<HistoryItem>> allHsitoryCache = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, BoundedSynchronisedSortedMapCache<CriticalEvent>> criticalEventsCache = new ConcurrentHashMap<>();
 
-    public EventsListOptimisedService(int historySizeBound) {
+    public EventsSortedMapService(int historySizeBound) {
         this.historySizeBound = historySizeBound;
     }
 
@@ -20,12 +21,12 @@ public class EventsListOptimisedService implements EventsService {
     public void addCriticalEvent(CriticalEvent event) {
         allHsitoryCache.computeIfAbsent(
                 event.getAtmId(),
-                s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
+                s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
         ).addItem(event);
 
         criticalEventsCache.computeIfAbsent(
                 event.getAtmId(),
-                s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
+                s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
         ).addItem(event);
     }
 
@@ -33,7 +34,7 @@ public class EventsListOptimisedService implements EventsService {
     public void addInfoEvent(InfoEvent event) {
         allHsitoryCache.computeIfAbsent(
                 event.getAtmId(),
-                s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
+                s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
         ).addItem(event);
     }
 
@@ -41,9 +42,10 @@ public class EventsListOptimisedService implements EventsService {
     public void addTransactionEvent(TransactionEvent event) {
         allHsitoryCache.computeIfAbsent(
                 event.getAtmId(),
-                s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
+                s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
         ).addItem(event);
     }
+
 
     @Override
     public void addCriticalEventsList(List<CriticalEvent> events) {
@@ -53,13 +55,13 @@ public class EventsListOptimisedService implements EventsService {
                         (atmId, criticalEvents) -> {
                             allHsitoryCache.computeIfAbsent(
                                     atmId,
-                                    s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
-                            ).addItemList((List) criticalEvents);
+                                    s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
+                            ).addItemsList((List) criticalEvents);
 
                             criticalEventsCache.computeIfAbsent(
                                     atmId,
-                                    s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
-                            ).addItemList(criticalEvents);
+                                    s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
+                            ).addItemsList(criticalEvents);
                         }
                 );
     }
@@ -72,8 +74,8 @@ public class EventsListOptimisedService implements EventsService {
                         (atmId, criticalEvents) -> {
                             allHsitoryCache.computeIfAbsent(
                                     atmId,
-                                    s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
-                            ).addItemList((List) criticalEvents);
+                                    s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
+                            ).addItemsList((List) criticalEvents);
                         }
                 );
     }
@@ -86,8 +88,8 @@ public class EventsListOptimisedService implements EventsService {
                         (atmId, criticalEvents) -> {
                             allHsitoryCache.computeIfAbsent(
                                     atmId,
-                                    s -> new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
-                            ).addItemList((List) criticalEvents);
+                                    s -> new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
+                            ).addItemsList((List) criticalEvents);
                         }
                 );
     }
@@ -96,7 +98,7 @@ public class EventsListOptimisedService implements EventsService {
     public List<HistoryItem> getAllHistory(String atmId, long limit, long offset) {
         return allHsitoryCache.getOrDefault(
                 atmId,
-                new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
+                new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
         ).getAll(limit, offset);
     }
 
@@ -104,7 +106,8 @@ public class EventsListOptimisedService implements EventsService {
     public List<CriticalEvent> getCriticalEvents(String atmId, long limit, long offset) {
         return criticalEventsCache.getOrDefault(
                 atmId,
-                new BoundedSynchronisedSortedCacheList<>(HistoryItem::compareTo, historySizeBound)
+                new BoundedSynchronisedSortedMapCache<>(HistoryItem::compareTo, historySizeBound)
         ).getAll(limit, offset);
     }
+
 }

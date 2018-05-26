@@ -2,6 +2,7 @@ package com.github.alcereo;
 
 import com.github.alcereo.listopt.EventsListOptimisedService;
 import com.github.alcereo.simple.EventsSimpleService;
+import com.github.alcereo.sortedmap.EventsSortedMapService;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +53,12 @@ class ParametrisedEventsServiceTest {
                 ),
                 Arguments.of(
                         new EventsListOptimisedService(Integer.MAX_VALUE),
+                        atmId,
+                        limit,
+                        offset
+                ),
+                Arguments.of(
+                        new EventsSortedMapService(Integer.MAX_VALUE),
                         atmId,
                         limit,
                         offset

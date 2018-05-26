@@ -56,9 +56,9 @@ public class TestUtils {
                             .build()
             );
 
-            System.out.print("\rcritical = " + i);
+//            System.out.print("\rcritical = " + i);
         }
-        System.out.println();
+//        System.out.println();
 
         return resultList;
     }
@@ -80,9 +80,9 @@ public class TestUtils {
                             .data(UUID.randomUUID().toString())
                             .build()
             );
-            System.out.print("\rinfo = " + i);
+//            System.out.print("\rinfo = " + i);
         }
-        System.out.println();
+//        System.out.println();
 
         return resultList;
     }
@@ -102,9 +102,9 @@ public class TestUtils {
                             .data(UUID.randomUUID().toString())
                             .build()
             );
-            System.out.print("\rinfo = " + i);
+//            System.out.print("\rinfo = " + i);
         }
-        System.out.println();
+//        System.out.println();
 
         return resultList;
     }
@@ -146,9 +146,9 @@ public class TestUtils {
                             .data(UUID.randomUUID().toString())
                             .build()
             );
-            System.out.print("\rtransaction = " + i);
+//            System.out.print("\rtransaction = " + i);
         }
-        System.out.println();
+//        System.out.println();
 
         return resultList;
     }

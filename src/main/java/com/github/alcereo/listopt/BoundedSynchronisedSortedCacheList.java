@@ -2,6 +2,7 @@ package com.github.alcereo.listopt;
 
 import lombok.NonNull;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,22 +23,22 @@ public class BoundedSynchronisedSortedCacheList<T>{
         // We can keep the list sorted for example if we put each event
         // in the right position in the list when adding
 
-        if (list.size()>sizeBound)
-            list.removeLast();
+        list.addFirst(item);
+        list = list.stream()
+                .sorted(comparator)
+                .limit(sizeBound)
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
 
-        if (list.isEmpty() || comparator.compare(list.getFirst(), item) > 0) {
-            list.addFirst(item);
-            return;
-        }
+    public synchronized void addItemList(Collection<T> items) {
+        // We can keep the list sorted for example if we put each event
+        // in the right position in the list when adding
 
-        for (int index = 0; index < list.size(); index++) {
-            if (comparator.compare(list.get(index), item) > 0) {
-                list.add(index, item);
-                return;
-            }
-        }
-
-        list.addLast(item);
+        list.addAll(0, items);
+        list = list.stream()
+                .sorted(comparator)
+                .limit(sizeBound)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     public synchronized List<T> getAll(long limit, long offset){

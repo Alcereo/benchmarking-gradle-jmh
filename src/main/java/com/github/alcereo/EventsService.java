@@ -20,6 +20,19 @@ public interface EventsService {
     void addTransactionEvent(TransactionEvent event);
 
 
+    default void addCriticalEventsList(List<CriticalEvent> events){
+        events.forEach(this::addCriticalEvent);
+    }
+
+    default void addInfoEventsList(List<InfoEvent> events){
+        events.forEach(this::addInfoEvent);
+    }
+
+    default void addTransactionEventsList(List<TransactionEvent> events){
+        events.forEach(this::addTransactionEvent);
+    }
+
+
     List<HistoryItem> getAllHistory(String atmId, long limit, long offset);
 
     List<CriticalEvent> getCriticalEvents(String atmId, long limit, long offset);

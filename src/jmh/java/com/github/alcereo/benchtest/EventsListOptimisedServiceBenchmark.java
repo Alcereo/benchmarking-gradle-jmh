@@ -19,8 +19,8 @@ import static com.github.alcereo.benchtest.TestUtils.*;
 
 @Threads(4)
 @BenchmarkMode(Mode.Throughput)
-@Warmup(iterations = 3)
-@Measurement(iterations = 5)
+@Warmup(iterations = 3, time = 3)
+@Measurement(iterations = 5, time = 3)
 @State(Scope.Benchmark)
 @Fork(value = 1)
 public class EventsListOptimisedServiceBenchmark {
@@ -33,7 +33,7 @@ public class EventsListOptimisedServiceBenchmark {
     @Setup
     public void setup(BenchmarkParams params){
 
-        service = new EventsListOptimisedService(100);
+        service = new EventsListOptimisedService(samplesCount);
 
         Instant now = Instant.now();
 
@@ -46,9 +46,7 @@ public class EventsListOptimisedServiceBenchmark {
             service.addHistoryItem(criticalEvents.get(i));
             service.addHistoryItem(infoEvents.get(i));
             service.addHistoryItem(transactionEvents.get(i));
-            System.out.print("\rsample = " + i);
         }
-        System.out.println();
 
     }
 
