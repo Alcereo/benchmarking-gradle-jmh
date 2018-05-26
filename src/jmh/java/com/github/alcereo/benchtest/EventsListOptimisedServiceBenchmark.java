@@ -88,7 +88,6 @@ public class EventsListOptimisedServiceBenchmark {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(".*" + EventsListOptimisedServiceBenchmark.class.getSimpleName() + ".*")
-                .param("samplesCount","1000")
                 .build();
 
         new Runner(opt).run();

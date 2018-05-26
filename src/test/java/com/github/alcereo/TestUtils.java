@@ -1,8 +1,4 @@
-package com.github.alcereo.simple;
-
-import com.github.alcereo.CriticalEvent;
-import com.github.alcereo.InfoEvent;
-import com.github.alcereo.TransactionEvent;
+package com.github.alcereo;
 
 import java.time.Instant;
 import java.util.ArrayList;

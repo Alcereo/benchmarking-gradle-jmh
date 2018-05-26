@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.alcereo.simple.TestUtils.random;
+import static com.github.alcereo.TestUtils.random;
 
 class BoundedSynchronisedSortedCacheListTest {
 

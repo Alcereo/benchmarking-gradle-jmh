@@ -1,35 +1,31 @@
-package com.github.alcereo.listopt;
+package com.github.alcereo;
 
-import com.github.alcereo.CriticalEvent;
-import com.github.alcereo.HistoryItem;
+import com.github.alcereo.listopt.EventsListOptimisedService;
+import com.github.alcereo.simple.EventsSimpleService;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static com.github.alcereo.simple.TestUtils.*;
+import static com.github.alcereo.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-class EventsListOptimisedServiceTest {
+@DisplayName("EvensService classes")
+class ParametrisedEventsServiceTest {
 
-    private EventsListOptimisedService service;
     private static List<HistoryItem> history = new ArrayList<>();
-    private int limit;
-    private int offset;
-    private String atmId;
-    private static int querySizeBound;
 
     @BeforeAll
     static void setUpHistory() {
-
-        querySizeBound = 1000;
 
         Arrays.<Supplier<List<? extends HistoryItem>>>asList(
                 () -> buildCriticalEvents(1000),
@@ -42,17 +38,35 @@ class EventsListOptimisedServiceTest {
 
     }
 
-    @BeforeEach
-    void setUp() {
-        service = new EventsListOptimisedService(querySizeBound);
-        limit = random.nextInt(50);
-        offset = random.nextInt(100);
-        atmId = String.valueOf(random.nextInt(atmIdBound));
+    private static Stream<Arguments> parametersFactory() {
+        String atmId = String.valueOf(random.nextInt(atmIdBound));
+        int limit = random.nextInt(50);
+        int offset = random.nextInt(100);
+
+        return Stream.of(
+                Arguments.of(
+                        new EventsSimpleService(),
+                        atmId,
+                        limit,
+                        offset
+                ),
+                Arguments.of(
+                        new EventsListOptimisedService(Integer.MAX_VALUE),
+                        atmId,
+                        limit,
+                        offset
+                )
+        );
     }
 
     @DisplayName("Simple test for adding")
-    @Test
-    void simpleAddingTest() {
+    @ParameterizedTest
+    @MethodSource("parametersFactory")
+    void simpleAddingTest(EventsService service,
+                          String atmId,
+                          Integer limit,
+                          Integer offset
+    ) {
 
         val testList = history.stream()
                 .sorted()
@@ -70,8 +84,13 @@ class EventsListOptimisedServiceTest {
     }
 
     @DisplayName("Test getAll - limit/offset")
-    @Test
-    void getAllLimitOffsetTest() {
+    @ParameterizedTest
+    @MethodSource("parametersFactory")
+    void getAllLimitOffsetTest(EventsService service,
+                               String atmId,
+                               Integer limit,
+                               Integer offset
+    ) {
 
         history.forEach(service::addHistoryItem);
 
@@ -90,8 +109,13 @@ class EventsListOptimisedServiceTest {
     }
 
     @DisplayName("Test simple getCritical")
-    @Test
-    void getCriticalTest() {
+    @ParameterizedTest
+    @MethodSource("parametersFactory")
+    void getCriticalTest(EventsService service,
+                         String atmId,
+                         Integer limit,
+                         Integer offset
+    ) {
 
         limit = 10;
         offset = 0;
@@ -107,14 +131,20 @@ class EventsListOptimisedServiceTest {
                 .collect(Collectors.toList());
 
         assertIterableEquals(
-                expectedList,
-                service.getCriticalEvents(atmId, limit, offset)
-        );
+                        expectedList,
+                        service.getCriticalEvents(atmId, limit, offset)
+                );
     }
 
     @DisplayName("Test getCritical - offset/limit")
-    @Test
-    void getCriticalLimitOffsetTest() {
+    @ParameterizedTest
+    @MethodSource("parametersFactory")
+    void getCriticalLimitOffsetTest(
+            EventsService service,
+            String atmId,
+            Integer limit,
+            Integer offset
+    ) {
 
         history.forEach(service::addHistoryItem);
 
@@ -132,5 +162,4 @@ class EventsListOptimisedServiceTest {
         );
 
     }
-
 }
